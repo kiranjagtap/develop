@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%-5level %date{HH:mm:ss.SSS} %thread %X{mdcData} %logger{5}: %msg%n"/>
+        </Console>
+
+        <RollingFile name="RollingFile"
+                     fileName="${application.home:-..}/logs/application.log"
+                     filePattern="${application.home:-..}/logs/$${date:yyyy-MM}/application-%d{-dd-MMMM-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <pattern>%-5level %date{HH:mm:ss.SSS} %thread %X{mdcData} %logger{5}: %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- rollover on startup, daily and when the file reaches
+                    10 MegaBytes -->
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy
+                        size="30 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- LOG everything at INFO level -->
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+
+        <!-- third party libs -->
+        <logger name="org.springframework" level="error" />
+        <logger name="org.springframework.security" level="info" />
+        <logger name="springfox" level="error" />
+        <logger name="org.hibernate.orm.deprecation" level="error" />
+
+        <!-- Application Log -->
+        <logger name="com.adhaven.pac" level="info"/>
+
+    </Loggers>
+
+</Configuration>
